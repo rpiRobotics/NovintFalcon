@@ -1,0 +1,22 @@
+
+# Service to provide interface to the Novint Falcon Joystick
+service falcon_service
+
+option version 0.5
+
+struct ControllerInput
+	field	int32	positionX
+	field	int32	positionY
+	field	int32	positionZ
+	field	int32	center_button
+	field	int32	left_button
+	field	int32	right_button
+	field	int32	top_button
+end struct
+
+object Falcon
+	function void setForce(double[] force)
+	property double[] position
+	property int32 button_status
+	property ControllerInput controller_input
+end object
