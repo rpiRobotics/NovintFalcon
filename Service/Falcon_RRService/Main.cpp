@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
 	cout << "Falcon server started. Connect with URL\n"
 		"\t'tcp://localhost:2354/falconServer/Falcon' \n"
 		"available functions: \n\tsetForce(double force[3])\n"
-		"available propeties: \n\tcontroller_input\n\tposition\n\tbutton_status\n\n"
+		"available propeties: \n\tcontroller_input\n\tposition\n\tbutton_status\n\tdeadzone_enabled\n\tdeadzone_size\n\tdeadzone_feedback_enabled\n\n"
 		<< endl;
 	
 	cout << "Press enter to quit" << endl;

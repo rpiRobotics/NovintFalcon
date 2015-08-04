@@ -16,7 +16,7 @@ class Falcon_impl : public Falcon, public boost::enable_shared_from_this<Falcon_
 {
 public:
 	Falcon_impl(void);
-
+	//Properties
 	virtual RR_SHARED_PTR<ControllerInput > get_controller_input();
 	virtual void set_controller_input(RR_SHARED_PTR<ControllerInput > value);
 
@@ -26,6 +26,17 @@ public:
 	virtual int32_t get_button_status();
 	virtual void set_button_status(int32_t value);
 
+	virtual int32_t get_deadzone_enabled();
+	virtual void set_deadzone_enabled(int32_t enabled);
+
+	virtual int32_t get_deadzone_feedback_enabled();
+	virtual void set_deadzone_feedback_enabled(int32_t enable);
+	
+
+	virtual int32_t get_deadzone_size();
+	virtual void set_deadzone_size(int32_t percent);
+
+	// Functions
 	virtual void setForce(RR_SHARED_PTR<RobotRaconteur::RRArray<double > > force);
 
 	void getWorkspaceDims(double(&workspace)[6]){ Haptics.getDeviceWorkspace(workspace); }
@@ -34,5 +45,8 @@ public:
 
 private:
 	HapticsClass Haptics;
+	bool _deadzoneEnabled;
+	int32_t _deadzoneSize;
+	bool _deadzoneFeedbackEnabled;
 };
 

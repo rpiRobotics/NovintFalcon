@@ -7,8 +7,9 @@ ft = FTService.get_ft(0);
 initialWrench = ft.wrench;
 initialForces = initialWrench(1:3);
 
-startTime = tic;
-while toc(startTime) < 10 %[s]
+input = falcon.controller_input;
+button = input.left_button;
+while button ~= 1 %[s]
     wrench = ft.wrench;
     forces = wrench(1:3)-initialForces;
     
@@ -17,6 +18,9 @@ while toc(startTime) < 10 %[s]
     falconForces = R * forces * -1; % we want the reactive force, not the applied force
     
     falcon.setForce(falconForces);
+    
+    input = falcon.controller_input;
+    button = input.left_button;
 end
 
 falcon.setForce(zeros(3,1));
