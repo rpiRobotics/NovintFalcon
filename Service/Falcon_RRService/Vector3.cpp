@@ -1,16 +1,18 @@
 #include "Vector3.h"
 #include<math.h>
 
+Vector3::Vector3() : X(0), Y(0), Z(0)
+{
+}
 
 Vector3::Vector3(double x, double y, double z) 
 	: X(x), Y(y), Z(z)
 {
-
 }
+
 Vector3::Vector3(double x)
 	: X(x), Y(x), Z(x)
 {
-
 }
 Vector3::~Vector3()
 {

@@ -15,6 +15,9 @@ Falcon_impl::Falcon_impl(void)
 					"Not Homed",
 					MB_OK);
 
+	_deadzoneEnabled = true;
+	_deadzoneSize = 20;
+	_deadzoneFeedbackEnabled = false;
 }
 
 
@@ -60,14 +63,22 @@ RR_SHARED_PTR<ControllerInput > Falcon_impl::get_controller_input(void)
 	Haptics.getPosition(pos);
 
 	Vector3 vector(pos[0], pos[1], pos[2]);
-	/*
-	 * Values are hard coded... 
-	 *		0.06 is the max device workspace of the falcon.
-	 *		either make that available or call the function to get the info
-	 */
-	double maxPos = 0.06;
-	double threshold = 0.2 * maxPos;
-	Vector3 normalized = vector.Normalize(threshold, maxPos);
+	Vector3 normalized;
+
+	if (!_deadzoneEnabled){
+		normalized = vector.Normalize();
+	}
+	else{
+		/*
+		* Values are hard coded...
+		*		0.06 is the max device workspace of the falcon.
+		*		either make that available or call the function to get the info
+		*/
+		double maxPos = 0.06;
+		double threshold = (double(_deadzoneSize) / 100.0) * maxPos;
+		normalized = vector.Normalize(threshold, maxPos);
+	}
+
 
 	int32_t posInt[3];
 	posInt[0] = floor(normalized.X * 10000);
@@ -93,10 +104,41 @@ void Falcon_impl::set_controller_input(RR_SHARED_PTR<ControllerInput > value)
 	throw runtime_error("Read only property");
 }
 
+
+int32_t Falcon_impl::get_deadzone_enabled()
+{
+	return _deadzoneEnabled;
+}
+
+void Falcon_impl::set_deadzone_enabled(int32_t enabled)
+{
+	_deadzoneEnabled = (enabled > 0 ? true : false);
+}
+
+int32_t Falcon_impl::get_deadzone_feedback_enabled()
+{
+	return (_deadzoneFeedbackEnabled ? 1 : 0);
+}
+
+void Falcon_impl::set_deadzone_feedback_enabled(int32_t enabled)
+{
+	_deadzoneFeedbackEnabled = (enabled > 0 ? true : false);
+}
+
+void Falcon_impl::set_deadzone_size(int32_t percent)
+{
+	_deadzoneSize = percent;
+}
+
+int32_t Falcon_impl::get_deadzone_size()
+{
+	return _deadzoneSize;
+}
+
 void Falcon_impl::setForce(RR_SHARED_PTR<RobotRaconteur::RRArray<double > >force)
 {
 	if (force->Length() != 3){
-		throw runtime_error("Incorrect number of forces");
+		throw runtime_error("Incorrect number of forces specified");
 	}
 	double *forces = force->ptr();
 	Haptics.setForces(forces);

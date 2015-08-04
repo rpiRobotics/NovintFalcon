@@ -13,23 +13,39 @@ t2 = RR.TcpTransport()
 RRN.RegisterTransport(t2)
 
 #Connect to the service
-obj = RRN.ConnectService('tcp://localhost:2354/falconServer/Falcon')
+print "Connecting to Falcon..."
+falcon = RRN.ConnectService('tcp://localhost:2354/falconServer/Falcon')
 
-# pos = obj.getPosition()
-# print pos
-raw_input("About to start Button check")
+# Get the raw data from the falcon
+raw_input("Press Enter to get all controller input")
+falconInput = falcon.controller_input
+for val in falconInput:
+	print val
+
+# Check the position for 5 seconds
+raw_input("Press Enter to start Position Check")
+start = time.time()
+now = start
+while(now-start) < 5:
+	print falcon.position
+	now = time.time()
+
+# Check the button status for 5 seconds
+raw_input("Press Enter to start Button check")
 start = time.time()
 now = start
 while (now-start) < 5: #seconds
-	print obj.getButtonStatus()
+	print falcon.button_status
 	now = time.time()
 
-# force = float(raw_input("Enter A Force to Apply [N]\n"))
-# while True:
-	# obj.applyForce(force)
-	# force = float(raw_input("Enter A Force to Apply [N]\n"))
-	# if force == 717.0:
-		# break
+# Apply a force
+# Set as [X,Y,Z] forces
+force = float(raw_input("Enter A Force to Apply [N]\n"))
+falcon.setForce([0.0, 0.0, force])
+
+raw_input("Press Enter to Stop")
+falcon.setForce([0.0,0.0,0.0])
+	
 
 # Shutdown!
 RRN.Shutdown()
